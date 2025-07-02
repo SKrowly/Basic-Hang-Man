@@ -1,0 +1,151 @@
+#Final Project: Hangman Game
+import random #to import random to randomly choose a word from a provided list
+
+# Function to choose a random word from the list of words
+def challenge_word():
+    word_bank = ["sunflower", "elastic", "unicorn", "sherlock", "apartments",
+                 "classic", "pigs", "woodchuck", "december", "blanket", "messages",
+                 "weather", "cream", "ghost", "internet", "television", "houston", "helicopter", "train", "animal",
+                 "velociraptor", "handbag", "dinosaur", "window", "airplane", "ventilation", "transportation",
+                 "hydration", "starbucks",
+                 "california", "hippopotamus", "crocodile", "incomprehensibility", "spectacles", "package", "urgent",
+                 "discard",
+                 "collection", "women", "children", "specialty", "animation", "animatronics", "elimination", "computer", "rhythm", "shimmer", "whisper", "band", "library", 
+                 "collaboration", "international", "comprehensive", "unique", "ghostly", "carnival", "spectator", "football", "baseball", "soccer", "tennis", "ultimatum"]
+    word = random.choice(word_bank)  # To choose a random word
+    return word.upper()  # Makes sure the word is in uppercase, that way no error occurs when user inputs any case letter
+
+# Hangman body display, 7 available, spine is 2
+def display_hangman(wrong_choice):
+    if wrong_choice == 0:
+        print("\n")
+        print("--------- ")
+        print(" |      | ")
+        print(" |        ")
+        print(" |        ")
+        print(" |        ")
+        print(" |        ")
+        print("_____     ")
+    elif wrong_choice == 1:
+        print("\n")
+        print("--------- ")
+        print(" |      | ")
+        print(" |      O ")
+        print(" |        ")
+        print(" |        ")
+        print(" |        ")
+        print("_____     ")
+    elif wrong_choice == 2:
+        print("\n")
+        print("--------- ")
+        print(" |      | ")
+        print(" |      O ")
+        print(" |      | ")
+        print(" |        ")
+        print(" |        ")
+        print("_____     ")
+    elif wrong_choice == 3:
+        print("\n")
+        print("--------- ")
+        print(" |      | ")
+        print(" |      O ")
+        print(" |     \\|")  # Had to use double \\ because otherwise showed error if only one \
+        print(" |        ")
+        print(" |        ")
+        print("_____     ")
+    elif wrong_choice == 4:
+        print("\n")
+        print("---------  ")
+        print(" |      |  ")
+        print(" |      O  ")
+        print(" |     \\|/")
+        print(" |         ")
+        print(" |         ")
+        print("_____      ")
+    elif wrong_choice == 5:
+        print("\n")
+        print("---------  ")
+        print(" |      |  ")
+        print(" |      O  ")
+        print(" |     \\|/")
+        print(" |      |  ")
+        print(" |         ")
+        print("_____      ")
+    elif wrong_choice == 6:
+        print("\n")
+        print("---------  ")
+        print(" |      |  ")
+        print(" |      O  ")
+        print(" |     \\|/")
+        print(" |      |  ")
+        print(" |     /   ")
+        print("_____      ")
+    elif wrong_choice == 7:
+        print("\n")
+        print("---------  ")
+        print(" |      |  ")
+        print(" |      O  ")
+        print(" |     \\|/")
+        print(" |      |  ")
+        print(" |     / \\")
+        print("_____      ")
+
+# Function to display the word with guessed letters
+def display_word(word, guessed_letters):
+    display = ''
+    for letter in word:
+        if letter in guessed_letters:
+            display += letter
+        else:
+            display += "_"
+    return display
+
+# Hangman game function
+def hangman():
+    word = challenge_word()  # will select random word from list, as per first function
+    guessed_letters = []  # List to track guessed letters
+    wrong_choice = 0  # Initialized Number of wrong guesses at 0
+    max_attempts = 7  # Max number of wrong attempts until hangman complete, 0 is initial with no body parts
+    print("Welcome to Hangman! Let's play!")
+
+    while wrong_choice < max_attempts:  # Game will continue as long as hangman is not complete
+        print("\nWord to guess:", display_word(word, guessed_letters))  # Show word with guessed letters
+        print("Remaining wrong guesses: ", (max_attempts - wrong_choice))  # Corrected f-string
+        display_hangman(wrong_choice)  # Display hangman figure
+        guess = input("Please guess a letter or word: ").upper()  # Get user guess and ensure it's uppercase
+
+        # Check if input is valid
+        if len(guess) == 1 and guess.isalpha():
+            if guess in guessed_letters:  # If user already guessed that letter previously
+                print("You already guessed this letter ", guess)
+            elif guess not in word:#if the letter user guesses is not in the word
+                wrong_choice += 1
+                print("Wrong guess!",guess," is not in the word.")  # Displays the wrong guess
+            else:
+                guessed_letters.append(guess)
+                print("Amazing guess!", guess," is in the word.")
+        elif len(guess) == len(word) and guess.isalpha():
+            if guess == word:  # If user types in whole word and gets it correct
+                print("Congratulations, You win! You guessed the word: ",word)
+                break
+            else:  # If user guesses whole word and is incorrect
+                wrong_choice += 1
+                print("Wrong guess! The word ",guess," is not correct.")
+        else: #If user inputs anything that is not a valid letter
+            print("Invalid input. Please guess a single letter or the full word.")
+            print("Hint: make sure your full word guess is not longer or shorter than the mystery word")
+
+        # Check if all letters are guessed
+        if all(letter in guessed_letters for letter in word):
+            print("\nCongratulations, you win! You guessed the word: ", word)
+            break  # Check if all letters are guessed, winning
+
+    # If maximum attempts are reached, game ends...
+    if wrong_choice == max_attempts:
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("\nGame Over, You Lost! The word was:", word)
+        display_hangman(wrong_choice)
+
+# Start the game
+if __name__ == "__main__":
+    hangman()  # Will start all the functions defined as needed to start the game
